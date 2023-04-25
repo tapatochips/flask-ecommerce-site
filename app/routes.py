@@ -44,7 +44,7 @@ def removeFromCart(cartid):
     flash('Item removed from cart', 'success')
     return redirect(url_for('cart'))
 
-@app.route('/emptycart')
+@app.route('/emptycart', methods=['POST'])
 def emptyCart():
     cart = Cart.query.filter_by(user_id=current_user.id).all()
     cart.deleteFromDB()
