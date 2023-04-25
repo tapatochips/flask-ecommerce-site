@@ -47,9 +47,10 @@ def removeFromCart(cartid):
 @app.route('/emptycart')
 def emptyCart():
     cart = Cart.query.filter_by(user_id=current_user.id).all()
-    cart.deleteFromDB()
+    for item in cart:
+        item.deleteFromDB()
     flash('Purchase made successfully', 'success')
-    return redirect('index.html')
+    return redirect(url_for('base'))
 
 @app.route('/remove/<int:prodid>')
 def removeItem(prodid): #This is an admin feature to remove an item from inventory
