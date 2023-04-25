@@ -1,6 +1,6 @@
-# Project Name
+# Flask E-commerce Project stuff and thigns
 
-A brief description of your project.
+This project is a basic e-commerce site, allows an admin to create products, and remove them, also also users to add items to cart and checkout
 
 ## Table of Contents
 
