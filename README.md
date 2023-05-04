@@ -4,7 +4,7 @@ This project is a basic e-commerce site, allows an admin to create products, and
 
 ## Table of Contents
 
-- [Installation](#SEE requirements.txt)
+- [Installation](#requirements.txt)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)

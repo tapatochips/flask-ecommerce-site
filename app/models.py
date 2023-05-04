@@ -1,6 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_login import UserMixin, current_user
+from werkzeug.security import generate_password_hash
+from secrets import token_hex
 
 db = SQLAlchemy()
 
@@ -14,13 +16,24 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(25))
     last_name = db.Column(db.String(25))
     admin = db.Column(db.Boolean, default=False)
+    apitoken = db.Column(db.String, unique=True)
 
     def __init__(self, username, password, first_name, last_name, email):
         self.username = username
-        self.password = password
+        self.password = generate_password_hash(password)
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
+        self.apitoken = token_hex(16)
+        
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'apitoken': self.apitoken
+        }
+        
 
     def is_admin():
         return current_user.is_authenticated and current_user.admin
