@@ -4,25 +4,37 @@ from .models import db, User
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from .auth.routes import auth
+from .api import api
+from flask_moment import Moment
+from flask_cors import CORS
+from .site import site
 
-
-
-app = Flask(__name__)
-app.config.from_object(Config)
-
-db.init_app(app)
-migrate = Migrate(app, db)
-login_manager = LoginManager(app)
+migrate = Migrate()
+login_manager = LoginManager()
+moment = Moment()
+cors = CORS()
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
 
-# login_manager.login_view = 'auth.loginPage'
+login_manager.login_view = 'auth.loginPage'
 
 
-app.register_blueprint(auth)
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+
+    db.init_app(app)
+    migrate.init_app(app,db)
+    login_manager.init_app(app)
+    moment.init_app(app)
+    cors.init_app(app)
+
+    app.register_blueprint(auth)
+    app.register_blueprint(api)
+    app.register_blueprint(site)
+    
 
 
-from . import routes
-from . import models
+    return app

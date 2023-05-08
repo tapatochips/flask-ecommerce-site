@@ -14,7 +14,7 @@
                 <p>${{ product.price }}</p>
             </div>
             <div class="product_buttons">
-                <a class="btn btn-primary" href="{{ url_for('product_detail', product_id=product.id) }}" role="button">More Details</a>
+                <a class="btn btn-primary" href="{{ url_for('site.product_detail', product_id=product.id) }}" role="button">More Details</a>
                 <a class="btn btn-primary" href="/addtocart/{{ product.id }}" role="button">Add to Cart</a>
                 {% if admin == True %}
                 <a class="btn btn-primary" href="/edititem/{{ product.id }}" role="buttom">Edit Item</a>
