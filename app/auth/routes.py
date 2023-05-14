@@ -2,6 +2,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from .forms import Address, LogIn, SignUpForm, InventoryField
 from ..models import Cart, Inventory, Order, User
 from flask_login import current_user, login_user, logout_user, login_required, login_manager
+from werkzeug.security import check_password_hash
 
 auth = Blueprint('auth', __name__, template_folder='auth_templates')
 
@@ -40,10 +41,10 @@ def signin():
             print(user, 'befor if statement')
             if user:
                 print(user, 'inside if statement')
-                if user.password == password:
+                if check_password_hash(user.password, password):
                     login_user(user)
                     flash('Signed in successfully', "success")
-                    return redirect(url_for('base'))
+                    return redirect(url_for('site.base'))
                 else:
                     flash('invalid username or password', "danger")
             else:
@@ -64,8 +65,10 @@ def logMeOut():
 @auth.route('/admin', methods=["GET", "POST"])
 @login_required
 def adminDash():
+    print('in the route')
     form = InventoryField()
-    if User.is_admin():
+    user = current_user
+    if user.is_admin():
         print('The user is an admin!!')
         if request.method == 'POST':
             if form.validate():

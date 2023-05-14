@@ -12,11 +12,13 @@ from . import site
 
 @site.route('/index')
 def base():
+    user = current_user
     cartSize = Cart.Size()
     products = Inventory.query.all()
-    admin = User.is_admin()
+    admin = user.is_admin()
     print(admin)
     return render_template('index.html', products=products, admin=admin, cartSize=cartSize)
+
 
 @site.route('/cart')
 def cart():

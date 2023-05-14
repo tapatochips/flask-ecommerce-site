@@ -9,8 +9,8 @@ db = SQLAlchemy()
 class User(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(25), nullable = False, unique = True)
-    password = db.Column(db.String(100), nullable = False)
+    username = db.Column(db.String(100), nullable = False, unique = True)
+    password = db.Column(db.String(150), nullable = False)
     email = db.Column(db.String(100), nullable = False, unique = True)
     date_created = db.Column(db.DateTime, nullable = False, default=datetime.utcnow())
     first_name = db.Column(db.String(25))
@@ -35,7 +35,7 @@ class User(db.Model, UserMixin):
         }
         
 
-    def is_admin():
+    def is_admin(self):
         return current_user.is_authenticated and current_user.admin
  
     def saveToDB(self):
@@ -75,6 +75,18 @@ class Inventory(db.Model):
     def deleteFromDB(self):
         db.session.delete(self)
         db.session.commit()
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'product_name': self.product_name,
+            'price': self.price,
+            'description': self.description,
+            'image': self.image,
+            'image2': self.image2,
+            'image3': self.image3,
+            'image4': self.image4
+        }
 
 
 class Cart(db.Model):
