@@ -6,8 +6,9 @@ from flask_login import current_user
 import os
 import stripe
 
-stripe.api_key = os.environ.get('STRIPE_API_KEY')
 
+stripe.api_key = os.environ.get('STRIPE_API_KEY')
+FRONT_END_URL = os.environ.get('FRONT_END_URL')
 
 
 @api.get('/products')
@@ -69,34 +70,35 @@ def removeFromCartAPI(product_id):
             'message': f"You do not have that item in your cart."
         }
 
-@api.post("/create-checkout-session")
+@api.post('/checkout')
 def checkout():
-    
     try:
         data = request.form
-        print(data.items)
-        user = data.get('user')
-        print(user)
+        print(data,'This is data')
         line_items = []
-        for price, qty in data.items():
+        for thing, info in data.items():
+            item = info.split(', ')
+            print(item[0])
+            print(item[1])
             line_items.append({
-                'price':price,
-                'quantity':qty
-            }),
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': thing,
+                        'images': [item[0]],
+                    },
+                    'unit_amount_decimal': "{:.2f}".format(float(item[1])*100),
+                },
+                'quantity': item[2],
+            })
         checkout_session = stripe.checkout.Session.create(
-            customer_email = user['email'],
-        billing_address_collection='auto',
-        shipping_address_collection={
-            "allowed_countries":['US','CA']
-        },
+            # line_items=line_items,
             line_items=line_items,
             mode='payment',
-            success_url ='FRONT_END_URL'+'?success=true',
-            cancel_url ='FRONT_END_URL'+'?canceled=true',
+            success_url=FRONT_END_URL + '?success=true',
+            cancel_url=FRONT_END_URL + '?canceled=true',
         )
-        
     except Exception as e:
         return str(e)
-    
     return redirect(checkout_session.url, code=303)
         
