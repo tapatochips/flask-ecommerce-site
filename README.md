@@ -1,4 +1,4 @@
-# Flask E-commerce Project stuff and thigns
+# Flask E-commerce Project stuff and things
 
 This project is a basic e-commerce site, allows an admin to create products, and remove them, also also users to add items to cart and checkout
 
